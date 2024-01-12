@@ -33,34 +33,18 @@ def pad_sequences(sequences, maxlen, padding='post', value=0):
     return padded_sequences
 
 # Set the path to the model and tokenizer
-# model_path = os.path.join(settings.BASE_DIR,'models', 'random_forest_model.joblib')
-# tokenizer_path = os.path.join(settings.BASE_DIR,'models', 'tfidf_vectorizer.joblib')
-# # Load the pre-trained hate speech detection model and tokenizer
-# model = load(model_path)
-# tokenizer = load(tokenizer_path)
+model_path = os.path.join(settings.BASE_DIR,'models', 'bert_model.joblib')
 
-# Preprocess the input text
-# def preprocess_text(text):
-#     # Tokenize the text using your loaded tokenizer
-#     X = tokenizer.transform([text])
-#     X_dense = X.toarray() if isinstance(X, csr_matrix) else X
-#     # Pad the tokenized sequence to the desired length
-#     X = pad_sequences(X_dense, maxlen=2000)  
-#     return X
+model = load(model_path)
 
 def predict_hate_speech(request):
     if request.method == 'POST':
         input_text = request.POST.get('inputText')
-        # preprocessed_text = preprocess_text(input_text)
-        
-        # Make a prediction using the loaded model
-        # prediction = model.predict(input_text)
+       
+        prediction = model.predict(input_text)
         
         # #predicted_class = "Hate Speech" if float(prediction[0]) > 0.5 else "Not Hate Speech"
-        # predicted_class = prediction[0]
-        
-        # Save the user input and prediction result to the database
-        # user_input = UserInput.objects.create(text=input_text, predicted_class=predicted_class, prediction_confidence=prediction[0])
-        
+        predicted_class = prediction[0]
+       
         return JsonResponse({'prediction'})
     return render(request, 'hate_speech_form.html')
